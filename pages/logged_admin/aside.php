@@ -19,7 +19,20 @@
 
 		<!-- Sidebar Menu -->
 		<nav class="mt-2">
-
+			<ul class="nav flex-column">
+				<li class="nav-item">
+					<a class="nav-link active" href="?view=dashboard">Pulpit</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="?view=users">Zarządzanie Użytkownikami</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="?view=add_user">Dodaj Użytkownika</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="?view=classes">Zarządzanie Klasami</a>
+				</li>
+			</ul>
 		</nav>
 		<!-- /.sidebar-menu -->
 	</div>
