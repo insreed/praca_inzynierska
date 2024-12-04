@@ -2,61 +2,89 @@
 session_start();
 require_once "./connect.php";
 
-$error = 0;
-foreach ($_POST as $key => $value){
-    if (empty($value)){
-        $_SESSION["message"] = "Wypełnij wszystkie pola";
-        $error++;
+// Walidacja pól
+$errors = [];
+
+// Sprawdzenie czy pola są wypełnione
+foreach ($_POST as $key => $value) {
+    if (empty($value) && $key !== 'additional_email') { // "additional_email" nie jest wymagany
+        $errors[] = "Pole $key nie może być puste";
     }
 }
 
-// Add field-specific validation rules here
+// Walidacja szczegółowa
 if (empty($_POST["firstName"])) {
-    $_SESSION["message"] = "Wpisz imię";
-    $error++;
+    $errors[] = "Wpisz imię";
 }
 
 if (empty($_POST["lastName"])) {
-    $_SESSION["message"] = "Wpisz nazwisko";
-    $error++;
+    $errors[] = "Wpisz nazwisko";
 }
 
 if (empty($_POST["password"])) {
-    $_SESSION["message"] = "Wpisz hasło";
-    $error++;
+    $errors[] = "Wpisz hasło";
+} else {
+    // Sprawdzamy, czy hasło spełnia kryteria bezpieczeństwa
+    $password = $_POST["password"];
+    if (strlen($password) < 8) {
+        $errors[] = "Hasło musi mieć co najmniej 8 znaków";
+    }
+    if (!preg_match("/[A-Z]/", $password)) {
+        $errors[] = "Hasło musi zawierać co najmniej jedną wielką literę";
+    }
+    if (!preg_match("/[a-z]/", $password)) {
+        $errors[] = "Hasło musi zawierać co najmniej jedną małą literę";
+    }
+    if (!preg_match("/[0-9]/", $password)) {
+        $errors[] = "Hasło musi zawierać co najmniej jedną cyfrę";
+    }
 }
 
 if (empty($_POST["email"])) {
-    $_SESSION["message"] = "Wpisz adres email";
-    $error++;
+    $errors[] = "Wpisz adres email";
+} elseif (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+    $errors[] = "Niepoprawny format adresu email";
 }
 
-// Add more field validations if needed
-
-if (!isset($_POST["term"])){
-    $_SESSION["message"] = "Zatwierdź regulamin!";
-    $error++;
+if (!isset($_POST["term"])) {
+    $errors[] = "Zatwierdź regulamin!";
 }
 
-if ($error != 0){
-    echo "<script>history.back();</script>";
+// Jeśli są błędy, wróć do poprzedniej strony
+if (count($errors) > 0) {
+    $_SESSION["error"] = "failure";
+    $_SESSION["message"] = implode("<br>", $errors);
+    header("location: ../pages/logged.php?view=add_user&action=add&success=false");
     exit();
 }
 
-$sql = "INSERT INTO `users` (`id`, `email`,`additional_email`,`firstName`, `lastName`, `birthday`, `password`) VALUES (NULL,'$_POST[email]','$_POST[additional_email]', '$_POST[firstName]', '$_POST[lastName]', '$_POST[birthday]', '$_POST[password]');";
-$conn->query($sql);
+// Haszowanie hasła przed zapisaniem do bazy danych
+$hashedPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-$successMessage = "Pomyślnie dodano użytkownika!";
-$failureMessage = "Nie udało się dodać użytkownika!";
+// Przygotowanie zapytania do dodania użytkownika
+$query = "INSERT INTO `users` (`email`, `additional_email`, `firstName`, `lastName`, `birthday`, `password`) VALUES (?, ?, ?, ?, ?, ?)";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("ssssss", $_POST['email'], $_POST['additional_email'], $_POST['firstName'], $_POST['lastName'], $_POST['birthday'], $hashedPassword);
 
-if ($conn->affected_rows == 1) {
-    $_SESSION["error"] = "success";
-    $_SESSION["message"] = $successMessage;
-    header("location: ../pages/logged.php?success=true");
+if ($stmt->execute()) {
+    $affectedRows = $stmt->affected_rows;
+
+    if ($affectedRows > 0) {
+        $_SESSION["error"] = "success";
+        $_SESSION["message"] = "Pomyślnie dodano użytkownika!";
+        header("location: ../pages/logged.php?view=add_user&action=add&success=true");
+    } else {
+        $_SESSION["error"] = "failure";
+        $_SESSION["message"] = "Nie udało się dodać użytkownika!";
+        header("location: ../pages/logged.php?view=add_user&action=add&success=false");
+    }
 } else {
     $_SESSION["error"] = "failure";
-    $_SESSION["message"] = $failureMessage;
-    header("location: ../pages/logged.php?success=false");
+    $_SESSION["message"] = "Błąd podczas dodawania użytkownika!";
+    header("location: ../pages/logged.php?view=add_user&action=add&success=false");
 }
+
+// Zamknięcie połączenia
+$stmt->close();
 $conn->close();
-//header("location: ../pages/logged.php");
+?>
