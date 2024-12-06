@@ -83,7 +83,7 @@
     font-size: 16px;
     width: auto; /* Dynamiczna szerokość */
     height: auto; /* Dynamiczna wysokość */
-    margin-left: 10px; /* Odstęp od przycisków ocen */
+    margin: 10px;
     transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
 }
 
@@ -229,7 +229,9 @@
                 <input type='hidden' name='id_nauczyciela' value='<?php echo $teacher_id; ?>'>
                 <input type='hidden' name='id_przedmiotu' value='<?php echo $subject_id; ?>'>
                 <input type='hidden' name='id_klasy' value='<?php echo $class_id; ?>'>
+                <?php if (isset($_GET["classId"]) && isset($_GET["subjectId"])): ?>
                 <button type='submit' class='btn-submit'>Zapisz wszystkie oceny</button>
+                <?php endif; ?>
             </form>
         </div><!--/. container-fluid -->
     </section>
