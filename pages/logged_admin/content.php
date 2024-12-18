@@ -37,8 +37,20 @@
                         include 'admin_classes.php';
                         break;
 
-                    case 'reports':
-                        include 'admin_reports.php';
+                    case 'subjects':
+                        include 'admin_subjects.php';
+                        break;
+
+                    case 'grades':
+                        include 'admin_grades.php';
+                        break;
+
+                    case 'edit_user':
+                        include 'edit_user.php';
+                        break;
+
+                    case 'assign_teacher':
+                        include 'assign_teacher.php';
                         break;
 
                     case 'dashboard':
