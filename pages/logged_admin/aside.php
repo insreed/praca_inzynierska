@@ -21,19 +21,38 @@
 		<nav class="mt-2">
 			<ul class="nav flex-column">
 				<li class="nav-item">
-					<a class="nav-link active" href="?view=dashboard">Pulpit</a>
+					<a class="nav-link active" href="?view=dashboard">
+						<i class="nav-icon fas fa-tachometer-alt"></i>
+						Pulpit
+					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="?view=users">Zarządzanie Użytkownikami</a>
+					<a class="nav-link" href="?view=users">
+						<i class="nav-icon fas fa-users"></i>
+						Użytkownicy
+					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="?view=add_user">Dodaj Użytkownika</a>
+					<a class="nav-link" href="?view=classes">
+						<i class="nav-icon fas fa-chalkboard-teacher"></i>
+						Klasy
+					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="?view=classes">Zarządzanie Klasami</a>
+					<a href="?view=subjects" class="nav-link">
+						<i class="nav-icon fas fa-book"></i>
+						Przedmioty
+					</a>
+				</li>
+				<li class="nav-item">
+					<a href="?view=grades" class="nav-link">
+						<i class="nav-icon fas fa-star"></i> <!-- Ikona dla ocen -->
+						Oceny
+					</a>
 				</li>
 			</ul>
 		</nav>
+
 		<!-- /.sidebar-menu -->
 	</div>
 	<!-- /.sidebar -->
