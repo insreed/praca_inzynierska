@@ -1,3 +1,3 @@
 <footer class="main-footer">
-	Projekt Aplikacje Internetowe WSB 2023
+	Praca Inżynierska WSB Merito 2024/2025, Adam Stankiewicz, Maciej Szewczuk, Jakub Kowalski
 </footer>
