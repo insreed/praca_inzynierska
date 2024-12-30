@@ -23,6 +23,24 @@ if (!$teacher) {
     exit();
 }
 
+// Sekcja wyświetlania komunikatów
+if (isset($_SESSION["message"])) {
+    $message = $_SESSION["message"];
+    $alertClass = ($_SESSION["error"] === "success") ? "alert-success" : "alert-danger";
+
+    echo <<<ALERT
+    <div class="alert $alertClass alert-dismissible fade show" role="alert">
+        $message
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    ALERT;
+
+    unset($_SESSION["message"]);
+    unset($_SESSION["error"]);
+}
+
 // Pobierz listę przydzielonych klas i przedmiotów
 $sqlAssignments = "SELECT 
                         przydział_nauczyciel.id_przydzialu, 
@@ -41,24 +59,27 @@ $stmtAssignments = $conn->prepare($sqlAssignments);
 $stmtAssignments->bind_param("i", $teacherId);
 $stmtAssignments->execute();
 $resultAssignments = $stmtAssignments->get_result();
-
 ?>
 
 <div class="container mt-4">
-    <h2>Przydział klas dla nauczyciela: <?php echo htmlspecialchars($teacher['firstName'] . ' ' . $teacher['lastName']); ?></h2>
+    <h2>Przydział klas dla nauczyciela:
+        <?php echo htmlspecialchars($teacher['firstName'] . ' ' . $teacher['lastName']); ?></h2>
+
+    <!-- Przycisk powrotu -->
+    <a href="?view=users" class="btn btn-secondary mb-3">Powrót do użytkowników</a>
 
     <!-- Tabela z aktualnymi przydziałami -->
     <div class="table-responsive mt-3">
-    <table class="table table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th>Klasa</th>
-                <th>Przedmiot</th>
-                <th>Akcje</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($row = $resultAssignments->fetch_assoc()): ?>
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Klasa</th>
+                    <th>Przedmiot</th>
+                    <th>Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = $resultAssignments->fetch_assoc()): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($row['klasa']); ?></td>
                         <td><?php echo htmlspecialchars($row['przedmiot']); ?></td>
@@ -71,7 +92,6 @@ $resultAssignments = $stmtAssignments->get_result();
             </tbody>
         </table>
     </div>
-
 
     <!-- Formularz do dodawania przydziału -->
     <h4>Dodaj Przydział</h4>
@@ -100,7 +120,7 @@ $resultAssignments = $stmtAssignments->get_result();
                 $sqlSubjects = "SELECT id_przedmiotu, nazwa_przedmiotu FROM przedmioty";
                 $resultSubjects = $conn->query($sqlSubjects);
                 while ($subject = $resultSubjects->fetch_assoc()) {
-                    echo "<option value='{$subject['id']}'>{$subject['nazwa_przedmiotu']}</option>";
+                    echo "<option value='{$subject['id_przedmiotu']}'>{$subject['nazwa_przedmiotu']}</option>";
                 }
                 ?>
             </select>

@@ -54,15 +54,20 @@
                         break;
 
                     case 'dashboard':
+                        include 'admin_dashboard.php';
+                        break;
+
                     default:
-                        echo "<h2 class='text-center'>Witamy w panelu administratora!</h2>";
-                        echo "<p class='text-center'>Wybierz odpowiednią opcję z menu, aby rozpocząć zarządzanie.</p>";
+                        echo "<h2 class='text-center text-danger'>Nieznany widok!</h2>";
+                        echo "<p class='text-center'>Widok, który próbujesz załadować, nie istnieje. Wróć do pulpitu.</p>";
+                        echo "<div class='text-center mt-4'><a href='?view=dashboard' class='btn btn-primary'>Powrót do pulpitu</a></div>";
                         break;
                 }
             } else {
-                echo "<h2 class='text-center'>Witamy w panelu administratora!</h2>";
-                echo "<p class='text-center'>Wybierz odpowiednią opcję z menu, aby rozpocząć zarządzanie.</p>";
+                // Domyślny widok
+                include 'admin_dashboard.php';
             }
+
             ?>
         </div><!--/. container-fluid -->
     </section>
