@@ -1,0 +1,12 @@
+/* Rozwiązanie dla pól autouzupełniania */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    background-color: transparent !important;
+    color: inherit !important;
+    -webkit-box-shadow: 0 0 0px 1000px #212529 inset !important;
+    /* Dostosuj kolor tła */
+    box-shadow: 0 0 0px 1000px #212529 inset !important;
+    /* Dostosuj kolor tła */
+    transition: background-color 5000s ease-in-out 0s;
+}
