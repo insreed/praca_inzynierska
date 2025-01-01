@@ -17,44 +17,71 @@ if (isset($_SESSION["message"])) {
     unset($_SESSION["message"]);
     unset($_SESSION["error"]);
 }
+
+// Domyślne sortowanie
+$sortColumn = 'id';
+$sortOrder = 'asc';
+
+// Pobierz parametry sortowania z URL
+if (isset($_GET['sort']) && in_array($_GET['sort'], ['id', 'firstName', 'lastName', 'role', 'email', 'klasa'])) {
+    $sortColumn = $_GET['sort'];
+}
+if (isset($_GET['order']) && in_array($_GET['order'], ['asc', 'desc'])) {
+    $sortOrder = $_GET['order'];
+}
+
+// Zapytanie SQL z sortowaniem
+$sql = "SELECT 
+            users.id, 
+            users.firstName, 
+            users.lastName, 
+            roles.role, 
+            users.email,
+            COALESCE(klasa.nazwa, 'Brak klasy') AS klasa
+        FROM users
+        INNER JOIN roles ON users.role_id = roles.id
+        LEFT JOIN przydział_klasy ON users.id = przydział_klasy.id_uzytkownika
+        LEFT JOIN klasa ON przydział_klasy.id_klasy = klasa.id_klasy
+        ORDER BY $sortColumn $sortOrder";
+$result = $conn->query($sql);
 ?>
 
 <div class="container mt-4">
     <h2 class="w-100">Zarządzanie Użytkownikami</h2>
-<div class="w-100 mb-3">
-    <a href="#addUserForm" class="btn btn-primary">Dodawanie użytkownika</a>
-</div>
+
+    <!-- Link do dodawania użytkownika -->
+    <div class="w-100 mb-3">
+        <a href="#addUserForm" class="btn btn-primary">Dodawanie użytkownika</a>
+    </div>
 
     <!-- Lista użytkowników -->
     <div class="table-responsive mt-4">
         <table class="table table-bordered table-striped">
             <thead class="thead-dark">
                 <tr>
-                    <th>ID</th>
-                    <th>Imię</th>
-                    <th>Nazwisko</th>
-                    <th>Rola</th>
-                    <th>Email</th>
-                    <th>Klasa</th>
+                    <th>
+                        <a href="?view=users&sort=id&order=<?php echo ($sortColumn === 'id' && $sortOrder === 'asc') ? 'desc' : 'asc'; ?>" class="text-white">ID</a>
+                    </th>
+                    <th>
+                        <a href="?view=users&sort=firstName&order=<?php echo ($sortColumn === 'firstName' && $sortOrder === 'asc') ? 'desc' : 'asc'; ?>" class="text-white">Imię</a>
+                    </th>
+                    <th>
+                        <a href="?view=users&sort=lastName&order=<?php echo ($sortColumn === 'lastName' && $sortOrder === 'asc') ? 'desc' : 'asc'; ?>" class="text-white">Nazwiskr</a>
+                    </th>
+                    <th>
+                        <a href="?view=users&sort=role&order=<?php echo ($sortColumn === 'role' && $sortOrder === 'asc') ? 'desc' : 'asc'; ?>" class="text-white">Rola</a>
+                    </th>
+                    <th>
+                        <a href="?view=users&sort=email&order=<?php echo ($sortColumn === 'email' && $sortOrder === 'asc') ? 'desc' : 'asc'; ?>" class="text-white">Email</a>
+                    </th>
+                    <th>
+                        <a href="?view=users&sort=klasa&order=<?php echo ($sortColumn === 'klasa' && $sortOrder === 'asc') ? 'desc' : 'asc'; ?>" class="text-white">Klasa</a>
+                    </th>
                     <th>Akcje</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                $sql = "SELECT 
-                            users.id, 
-                            users.firstName, 
-                            users.lastName, 
-                            roles.role, 
-                            users.email,
-                            COALESCE(klasa.nazwa, 'Brak klasy') AS klasa
-                        FROM users
-                        INNER JOIN roles ON users.role_id = roles.id
-                        LEFT JOIN przydział_klasy ON users.id = przydział_klasy.id_uzytkownika
-                        LEFT JOIN klasa ON przydział_klasy.id_klasy = klasa.id_klasy
-                        ORDER BY users.id";
-                $result = $conn->query($sql);
-
                 if ($result && $result->num_rows > 0) {
                     while ($user = $result->fetch_assoc()) {
                         echo "<tr>";
