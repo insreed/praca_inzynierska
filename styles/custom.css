@@ -10,3 +10,43 @@ select:-webkit-autofill {
     /* Dostosuj kolor tła */
     transition: background-color 5000s ease-in-out 0s;
 }
+
+.ocena {
+    padding: 5px 10px 5px 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    color: black;
+    margin-top: 20px;
+}
+
+.oceny {
+    padding-left: 20px;
+}
+
+.kolor1 {
+    background-color: rgb(255, 0, 0);
+}
+
+.kolor2 {
+    background-color: rgb(255, 145, 0);
+}
+
+.kolor3 {
+    background-color: rgb(255, 208, 0);
+}
+
+.kolor4 {
+    background-color: rgb(204, 255, 0);
+}
+
+.kolor5 {
+    background-color: rgb(72, 255, 0);
+}
+
+.kolor6 {
+    background-color: rgb(0, 255, 149);
+}
+
+.przedmiot {
+    margin-bottom: 20px;
+}
