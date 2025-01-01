@@ -7,6 +7,7 @@ $grades = $_POST['grades']; // Oczekuje tablicy z ocenami (id_ucznia, wartosc)
 $id_nauczyciela = $_POST['id_nauczyciela'];
 $id_przedmiotu = $_POST['id_przedmiotu'];
 $id_klasy = $_POST['id_klasy'];
+$opis_oceny = $_POST['grade_description']; // Pobranie opisu oceny
 
 $success = true;
 
@@ -27,10 +28,10 @@ foreach ($grades as $grade) {
     $row = $result->fetch_assoc();
     $id_oceny = $row['id_oceny'];
 
-    // Dodaj wpis o wartości oceny
-    $sql3 = "INSERT INTO wpisy (id_oceny, wartosc) VALUES (?, ?)";
+    // Dodaj wpis o wartości oceny i opisie
+    $sql3 = "INSERT INTO wpisy (id_oceny, wartosc, opis_oceny) VALUES (?, ?, ?)";
     $stmt2 = $conn->prepare($sql3);
-    $stmt2->bind_param("is", $id_oceny, $wartosc);
+    $stmt2->bind_param("iss", $id_oceny, $wartosc, $opis_oceny);
     $stmt2->execute();
 
     // Sprawdź, czy dodanie wpisu zakończyło się sukcesem

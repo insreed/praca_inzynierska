@@ -1,101 +1,145 @@
 <style>
-.ocena {
-    padding: 5px 10px 5px 10px;
-    margin-right: 10px;
-    border-radius: 5px;
-    color: black;
-    margin-top: 20px;
-}
-.oceny {
-    padding-left: 20px;
-}
-.kolor1 {background-color: rgb(255, 0, 0)}
-.kolor2 {background-color: rgb(255, 145, 0)}
-.kolor3 {background-color: rgb(255, 208, 0)}
-.kolor4 {background-color: rgb(204, 255, 0)}
-.kolor5 {background-color: rgb(72, 255, 0)}
-.kolor6 {background-color: rgb(0, 255, 149)}
+    .ocena {
+        position: relative;
+        cursor: pointer;
+    }
 
-.tooltip {
-    z-index: 1112;
-    position: absolute;
-}
+    .oceny {
+        padding-left: 20px;
+    }
 
-.grade-btn {
-    padding: 10px;
-    border: none; /* Bez obramowania */
-    border-radius: 5px; /* Zaokrąglone rogi */
-    cursor: pointer; /* Wskaźnik kursora */
-    font-weight: bold; /* Pogrubiony tekst */
-    width: 40px; /* Stała szerokość przycisku */
-    height: 40px; /* Stała wysokość przycisku */
-    transition: transform 0.2s, box-shadow 0.3s; /* Płynne przejście dla transformacji i cienia */
-    margin-right: 5px; /* Odstęp między przyciskami */
-}
+    .kolor1 {
+        background-color: rgb(255, 0, 0)
+    }
 
-.grade-btn.kolor1 {
-    background-color: rgb(255, 0, 0);
-    color: #fff; /* Biały kolor tekstu */
-}
+    .kolor2 {
+        background-color: rgb(255, 145, 0)
+    }
 
-.grade-btn.kolor2 {
-    background-color: rgb(255, 145, 0);
-    color: #fff;
-}
+    .kolor3 {
+        background-color: rgb(255, 208, 0)
+    }
 
-.grade-btn.kolor3 {
-    background-color: rgb(255, 208, 0);
-    color: #000; /* Czarny kolor tekstu */
-}
+    .kolor4 {
+        background-color: rgb(204, 255, 0)
+    }
 
-.grade-btn.kolor4 {
-    background-color: rgb(204, 255, 0);
-    color: #000;
-}
+    .kolor5 {
+        background-color: rgb(72, 255, 0)
+    }
 
-.grade-btn.kolor5 {
-    background-color: rgb(72, 255, 0);
-    color: #000;
-}
+    .kolor6 {
+        background-color: rgb(0, 255, 149)
+    }
 
-.grade-btn.kolor6 {
-    background-color: rgb(0, 255, 149);
-    color: #000;
-}
+    .tooltip {
+        z-index: 1112;
+        position: absolute;
+    }
 
-.grade-btn:hover {
-    transform: scale(1.1); /* Powiększenie przycisku po najechaniu */
-}
+    .grade-btn {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        width: 40px;
+        height: 40px;
+        transition: transform 0.2s, box-shadow 0.3s;
+        margin-right: 5px;
+    }
 
-.grade-btn.selected {
-    box-shadow: 0 0 0 3px #007bff; /* Niebieskie obramowanie dookoła przycisku gdy jest wybrany */
-    outline: none; /* Usunięcie standardowego obramowania */
-}
+    .grade-btn.kolor1 {
+        background-color: rgb(255, 0, 0);
+        color: #fff;
+    }
 
-.btn-submit {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    background-color: #28a745; /* Zielone tło */
-    color: #fff; /* Biały kolor tekstu */
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 16px;
-    width: auto; /* Dynamiczna szerokość */
-    height: auto; /* Dynamiczna wysokość */
-    margin: 10px;
-    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-}
+    .grade-btn.kolor2 {
+        background-color: rgb(255, 145, 0);
+        color: #fff;
+    }
 
-.btn-submit:hover {
-    background-color: #218838; /* Ciemniejszy zielony po najechaniu */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Dodanie cienia po najechaniu */
-}
+    .grade-btn.kolor3 {
+        background-color: rgb(255, 208, 0);
+        color: #000;
+    }
 
-.btn-submit:active {
-    transform: scale(0.98); /* Lekki efekt naciśnięcia */
-}
+    .grade-btn.kolor4 {
+        background-color: rgb(204, 255, 0);
+        color: #000;
+    }
 
+    .grade-btn.kolor5 {
+        background-color: rgb(72, 255, 0);
+        color: #000;
+    }
+
+    .grade-btn.kolor6 {
+        background-color: rgb(0, 255, 149);
+        color: #000;
+    }
+
+    .grade-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .grade-btn.selected {
+        box-shadow: 0 0 0 3px #007bff;
+        outline: none;
+    }
+
+    .btn-submit {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        background-color: #28a745;
+        color: #fff;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 16px;
+        width: auto;
+        height: auto;
+        margin: 10px;
+        transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+
+    .btn-submit:hover {
+        background-color: #218838;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-submit:active {
+        transform: scale(0.98);
+    }
+
+    .description-container {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .description-label {
+        margin-right: 10px;
+    }
+
+    #grade-description {
+        flex: 1;
+        border-radius: 5px;
+        border: 1px solid #696969;
+        padding: 10px;
+        background-color: #b4b4b4;
+        resize: none;
+        width: calc(100% - 50px);
+        /* Dopasowanie do przestrzeni */
+    }
+
+    #char-counter {
+        font-family: Arial, sans-serif;
+        color: #696969;
+        font-weight: bold;
+        font-size: 14px;
+    }
 </style>
 
 <div class="content-wrapper">
@@ -122,7 +166,7 @@
                     <?php
                     require_once "../scripts/connect.php";
 
-                    // Display classes assigned to the teacher after selecting a subject
+                    // wyswietlenie klas po wybraniu przedmiotu
                     $teacher_id = $_SESSION["logged"]["user_id"];
 
                     if (!isset($_GET["subjectId"])) {
@@ -131,9 +175,9 @@
 
                     if (isset($_GET["subjectId"])) {
                         $subject_id = intval($_GET["subjectId"]);
-                        
+
                         if (!isset($_GET["classId"])) {
-                            // Fetch classes assigned to the teacher for the selected subject
+                            // pobranie klas przypisanych do nauczyciela
                             $class_sql = "SELECT DISTINCT klasa.id_klasy, klasa.nazwa 
                                           FROM przydział_nauczyciel
                                           INNER JOIN klasa ON przydział_nauczyciel.id_klasy = klasa.id_klasy
@@ -153,12 +197,12 @@
                         }
                     }
 
-                    // Display students and their grades for the selected class and subject
+                    // wyswietlanie studentow i ich ocen
                     if (isset($_GET["classId"]) && isset($_GET["subjectId"])) {
                         $class_id = intval($_GET["classId"]);
                         $subject_id = intval($_GET["subjectId"]);
-                        
-                        // Display the selected class information
+
+                        // wyswietlanie klas
                         $class_name_sql = "SELECT nazwa FROM klasa WHERE id_klasy = $class_id";
                         $class_name_result = $conn->query($class_name_sql);
                         if ($class_name_result->num_rows > 0) {
@@ -166,7 +210,7 @@
                             echo "<h3>Oceny dla klasy: $class_name</h3>";
                         }
 
-                        // Fetch students for the selected class
+                        // pobranie studenow
                         $students_sql = "SELECT users.id AS id, users.firstName, users.lastName, users.email 
                                          FROM users
                                          INNER JOIN przydział_klasy ON przydział_klasy.id_uzytkownika = users.id
@@ -184,27 +228,34 @@
                             while ($student = $students_result->fetch_assoc()) {
                                 echo "<tr>";
                                 echo "<td>" . $student["firstName"] . " " . $student["lastName"] . "</td>";
-                                
-                                // Fetch grades for each student in the selected subject
+
+                                // pobranie ocen
                                 $student_id = $student['id'];
-                                $grades_sql = "SELECT przedmioty.nazwa_przedmiotu, wpisy.wartosc 
-                                               FROM oceny
-                                               LEFT JOIN wpisy ON oceny.id_oceny = wpisy.id_oceny
-                                               INNER JOIN przedmioty ON oceny.id_przedmiotu = przedmioty.id_przedmiotu
-                                               WHERE oceny.id_ucznia = $student_id AND oceny.id_przedmiotu = $subject_id";
+                                $grades_sql = "SELECT przedmioty.nazwa_przedmiotu, wpisy.wartosc, wpisy.opis_oceny, wpisy.data_wpisu
+                                    FROM oceny
+                                    LEFT JOIN wpisy ON oceny.id_oceny = wpisy.id_oceny
+                                    INNER JOIN przedmioty ON oceny.id_przedmiotu = przedmioty.id_przedmiotu
+                                    WHERE oceny.id_ucznia = $student_id AND oceny.id_przedmiotu = $subject_id";
+
                                 $grades_result = $conn->query($grades_sql);
 
                                 echo "<td class='oceny'>";
                                 if ($grades_result && $grades_result->num_rows > 0) {
                                     while ($grade = $grades_result->fetch_assoc()) {
-                                        echo "<span class='ocena kolor" . min(intval($grade['wartosc']), 6) . "'>" . htmlspecialchars($grade['wartosc']) . "</span> ";
+                                        $grade_value = intval($grade['wartosc']);
+                                        $grade_description = !empty($grade['opis_oceny']) ? htmlspecialchars($grade['opis_oceny']) : "Brak opisu";
+                                        $grade_date = !empty($grade['data_wpisu']) ? htmlspecialchars($grade['data_wpisu']) : "Brak daty";
+
+                                        echo "<span class='ocena kolor$grade_value' title='Data: $grade_date | Opis: $grade_description'>"
+                                            . $grade['wartosc']
+                                            . "</span> ";
                                     }
                                 } else {
                                     echo "Brak ocen";
                                 }
                                 echo "</td>";
 
-                                // Form to add a grade
+                                // Dodawanie oceny
                                 echo "<td>"
                                     . "<div style='display: flex; align-items: center;'>";
 
@@ -229,36 +280,55 @@
                 <input type='hidden' name='id_nauczyciela' value='<?php echo $teacher_id; ?>'>
                 <input type='hidden' name='id_przedmiotu' value='<?php echo $subject_id; ?>'>
                 <input type='hidden' name='id_klasy' value='<?php echo $class_id; ?>'>
-                <?php if (isset($_GET["classId"]) && isset($_GET["subjectId"])): ?>
-                <button type='submit' class='btn-submit'>Zapisz wszystkie oceny</button>
-                <?php endif; ?>
+                <?php
+                if (isset($_GET["classId"]) && isset($_GET["subjectId"])) {
+                ?>
+                    <div class="description-container">
+                        <label for="grade-description" class="description-label">Opis oceny (opcjonalny):</label>
+                        <textarea name="grade_description" id="grade-description" rows="1" maxlength="64"></textarea>
+                        <span id="char-counter">0/64</span>
+                        <button type="submit" class="btn-submit">Zapisz wszystkie oceny</button>
+                    </div>
+
+                <?php
+                }
+                ?>
             </form>
-        </div><!--/. container-fluid -->
+        </div>
     </section>
-    <!-- /.content -->
 </div>
 
 <script>
-function selectGrade(studentId, gradeValue) {
-    // Usuwa zaznaczenie z innych przycisków w tym formularzu dla tego samego ucznia
-    const studentRow = document.querySelector(`#grade-value-${studentId}`).closest('tr');
-    studentRow.querySelectorAll('.grade-btn').forEach(btn => btn.classList.remove('selected'));
-    
-    // Ustawia wybrany przycisk jako aktywny
-    studentRow.querySelector(`.grade-btn[data-value='${gradeValue}']`).classList.add('selected');
-    
-    // Ustawia wartość oceny w ukrytym polu
-    document.querySelector(`#grade-value-${studentId}`).value = gradeValue;
-}
+    function selectGrade(studentId, gradeValue) {
+        // Usuwa zaznaczenie z innych przycisków w tym formularzu dla tego samego ucznia
+        const studentRow = document.querySelector(`#grade-value-${studentId}`).closest('tr');
+        studentRow.querySelectorAll('.grade-btn').forEach(btn => btn.classList.remove('selected'));
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Usuwanie pustych ocen z formularza przed wysłaniem
-    document.querySelector('.btn-submit').addEventListener('click', (event) => {
-        document.querySelectorAll('.grade-input').forEach(input => {
-            if (!input.value) {
-                input.closest('div').remove();
-            }
+        // Ustawia wybrany przycisk jako aktywny
+        studentRow.querySelector(`.grade-btn[data-value='${gradeValue}']`).classList.add('selected');
+
+        // Ustawia wartość oceny w ukrytym polu
+        document.querySelector(`#grade-value-${studentId}`).value = gradeValue;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Usuwanie pustych ocen z formularza przed wysłaniem
+        document.querySelector('.btn-submit').addEventListener('click', (event) => {
+            document.querySelectorAll('.grade-input').forEach(input => {
+                if (!input.value) {
+                    input.closest('div').remove();
+                }
+            });
         });
     });
-});
+
+        // licznik znaków opisu
+    const textarea = document.getElementById('grade-description');
+    const counter = document.getElementById('char-counter');
+    textarea.addEventListener('input', () => {
+        const currentLength = textarea.value.length;
+        const maxLength = textarea.getAttribute('maxlength');
+        counter.textContent = `${currentLength}/${maxLength}`;
+    });
+    
 </script>
