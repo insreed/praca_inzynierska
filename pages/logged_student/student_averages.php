@@ -12,8 +12,8 @@
     <!-- /.content-header -->
 
     <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
+ 
+        
             <!-- Sekcja ze średnimi ocenami -->
             <div class="row">
                 <div class="col-lg-12">
@@ -67,11 +67,11 @@
                             </table>
                         </div>
                     </div>
-                </div>
-            </div>
+                
+           
 
             <!-- Możesz dodać dodatkowe sekcje -->
         </div>
-    </section>
+   
     <!-- /.content -->
 </div>
