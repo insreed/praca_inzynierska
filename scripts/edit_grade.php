@@ -2,30 +2,39 @@
 session_start();
 require_once "./connect.php";
 
+header('Content-Type: application/json'); // Zwracaj dane w formacie JSON
+
+$response = ["success" => false, "message" => ""];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_oceny = $_POST['id_oceny'];
     $wartosc = $_POST['wartosc'];
     $opis_oceny = $_POST['opis_oceny'];
 
-    // Aktualizacja oceny w bazie danych
     $sql = "UPDATE wpisy SET wartosc = ?, opis_oceny = ? WHERE id_oceny = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("isi", $wartosc, $opis_oceny, $id_oceny);
-    $stmt->execute();
 
-    if ($stmt->affected_rows >= 0) {
+    if ($stmt->execute()) {
+        $response["success"] = true;
+        $response["message"] = "Ocena została pomyślnie zaktualizowana!";
+        $_SESSION["message"] = $response["message"];
         $_SESSION["error"] = "success";
-        $_SESSION["message"] = "Ocena została pomyślnie zaktualizowana!";
     } else {
+        $response["message"] = "Nie udało się zaktualizować oceny!";
+        $_SESSION["message"] = $response["message"];
         $_SESSION["error"] = "failure";
-        $_SESSION["message"] = "Nie udało się zaktualizować oceny!";
     }
 
     $stmt->close();
     $conn->close();
-
-    // Powrót do strony
-    header("location: ../pages/logged.php");
-    exit();
+} else {
+    $response["message"] = "Nieprawidłowe żądanie!";
+    $_SESSION["message"] = $response["message"];
+    $_SESSION["error"] = "failure";
 }
-?>
+
+echo json_encode($response); // Zwróć odpowiedź JSON
+exit();
+
+
