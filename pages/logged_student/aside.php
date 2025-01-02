@@ -37,12 +37,12 @@
 				</li>
 
 				<!-- Średnie -->
-				<li class="nav-item">
+				<!-- <li class="nav-item">
 					<a class="nav-link" href="?view=averages">
 						<i class="nav-icon fas fa-chart-line"></i>
 						Średnie
 					</a>
-				</li>
+				</li> -->
 			</ul>
 		</nav>
 		<!-- /.sidebar-menu -->

@@ -1,71 +1,82 @@
-<h2 class="m-1">Twoje oceny</h2>
-<hr>
-<div class="oceny">
-    <?php
-    $user_id = $_SESSION["logged"]["user_id"];
-    require_once "../scripts/connect.php";
+<div class="container mt-5 pt-5">
+    <!-- Content Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-4">Twoje Oceny</h1>
+    </div>
 
-    // Pobranie klasy
-    $klasa_query = "SELECT * FROM przydział_klasy INNER JOIN klasa ON przydział_klasy.id_klasy = klasa.id_klasy WHERE id_uzytkownika = $user_id";
-    $klasa_result = $conn->query($klasa_query);
+    <div class="row justify-content-center">
+        <?php
+        $user_id = $_SESSION["logged"]["user_id"];
+        require_once "../scripts/connect.php";
 
-    while ($klasa_row = mysqli_fetch_assoc($klasa_result)) {
-        $klasa = $klasa_row['nazwa'];
-        $id_klasy = $klasa_row['id_klasy'];
-    }
+        // Pobranie przedmiotów i ocen
+        $przedmioty_query = "SELECT DISTINCT przedmioty.nazwa_przedmiotu, przedmioty.id_przedmiotu 
+                             FROM users 
+                             INNER JOIN oceny ON users.id = oceny.id_ucznia 
+                             NATURAL JOIN przedmioty 
+                             WHERE users.id = $user_id";
+        $przedmioty_result = $conn->query($przedmioty_query);
 
-    // Pobranie przedmiotów i ocen
-    $przedmioty_query = "SELECT DISTINCT przedmioty.nazwa_przedmiotu, przedmioty.id_przedmiotu 
-                         FROM users 
-                         INNER JOIN oceny ON users.id = oceny.id_ucznia 
-                         NATURAL JOIN przedmioty 
-                         WHERE users.id = $user_id";
-    $przedmioty_result = $conn->query($przedmioty_query);
+        $colors = ['bg-primary', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger', 'bg-secondary'];
+        $color_index = 0;
 
-    while ($przedmiot_row = mysqli_fetch_assoc($przedmioty_result)) {
-        $nazwa_przedmiotu = $przedmiot_row['nazwa_przedmiotu'];
-        $id_przedmiotu = $przedmiot_row['id_przedmiotu'];
+        while ($przedmiot_row = mysqli_fetch_assoc($przedmioty_result)) {
+            $nazwa_przedmiotu = $przedmiot_row['nazwa_przedmiotu'];
+            $id_przedmiotu = $przedmiot_row['id_przedmiotu'];
 
-        echo "<div class='przedmiot'>";
-        echo "<h4>$nazwa_przedmiotu</h4>";
+            // Pobranie średniej ocen dla przedmiotu
+            $srednia_query = "SELECT ROUND(AVG(wpisy.wartosc), 2) AS avg_grade 
+                              FROM wpisy 
+                              INNER JOIN oceny ON wpisy.id_oceny = oceny.id_oceny 
+                              WHERE oceny.id_ucznia = $user_id AND oceny.id_przedmiotu = $id_przedmiotu";
+            $srednia_result = $conn->query($srednia_query);
+            $srednia_row = $srednia_result->fetch_assoc();
+            $avg_grade = $srednia_row['avg_grade'] ?: "Brak";
 
-        $oceny_query = "SELECT * 
-                        FROM oceny 
-                        INNER JOIN users ON users.id = oceny.id_nauczyciela 
-                        WHERE oceny.id_ucznia = $user_id AND oceny.id_przedmiotu = $id_przedmiotu";
-        $oceny_result = $conn->query($oceny_query);
+            // Przypisanie koloru na podstawie id_przedmiotu
+            $color_class = $colors[$color_index % count($colors)];
+            $color_index++;
 
-        while ($ocena_row = mysqli_fetch_assoc($oceny_result)) {
-            $nauczyciel = $ocena_row['lastName'] . " " . $ocena_row['firstName'];
-            $id_oceny = $ocena_row['id_oceny'];
+            echo '<div class="col-12 mb-4">';
+            echo '<div class="card shadow-sm">';
+            echo '<div class="card-header ' . $color_class . ' text-white d-flex justify-content-between align-items-center">';
+            echo "<span class='card-title'>$nazwa_przedmiotu</span>";
+            echo "<span class='fw-bold ml-auto'>Średnia: $avg_grade</span>";
+            echo '</div>';
+            echo '<div class="card-body">';
 
-            $wpisy_query = "SELECT * 
+            $oceny_query = "SELECT wpisy.wartosc, wpisy.data_wpisu, wpisy.opis_oceny, users.firstName, users.lastName 
                             FROM wpisy 
-                            INNER JOIN oceny ON oceny.id_oceny = wpisy.id_oceny 
-                            INNER JOIN users ON users.id = oceny.id_nauczyciela 
-                            WHERE wpisy.id_oceny = $id_oceny 
-                            ORDER BY data_wpisu DESC LIMIT 1";
-            $wpisy_result = $conn->query($wpisy_query);
+                            INNER JOIN oceny ON wpisy.id_oceny = oceny.id_oceny 
+                            INNER JOIN users ON oceny.id_nauczyciela = users.id 
+                            WHERE oceny.id_ucznia = $user_id AND oceny.id_przedmiotu = $id_przedmiotu 
+                            ORDER BY wpisy.data_wpisu DESC";
+            $oceny_result = $conn->query($oceny_query);
 
-            while ($wpis_row = mysqli_fetch_assoc($wpisy_result)) {
-                $modyfikacje_query = "SELECT * 
-                                      FROM wpisy 
-                                      INNER JOIN oceny ON oceny.id_oceny = wpisy.id_oceny 
-                                      INNER JOIN users ON users.id = oceny.id_nauczyciela 
-                                      WHERE wpisy.id_oceny = $id_oceny 
-                                      ORDER BY data_wpisu DESC";
-                $modyfikacje_result = $conn->query($modyfikacje_query);
+            if ($oceny_result->num_rows > 0) {
+                while ($ocena_row = mysqli_fetch_assoc($oceny_result)) {
+                    $wartosc = $ocena_row['wartosc'];
+                    $data_wpisu = date("d-m-Y H:i", strtotime($ocena_row['data_wpisu']));
+                    $nauczyciel = $ocena_row['firstName'] . " " . $ocena_row['lastName'];
+                    $opis_oceny = $ocena_row['opis_oceny'] ?: "Brak";
 
-                $info = "<b>Wpisana przez:<br>$nauczyciel</b><br>Modyfikacje:<br>";
-                while ($modyfikacja_row = mysqli_fetch_assoc($modyfikacje_result)) {
-                    $info .= "Ocena: " . $modyfikacja_row["wartosc"] . " ";
-                    $info .= $modyfikacja_row["data_wpisu"] . " ";
+                    $info = "Ocena: $wartosc<br>Nauczyciel: $nauczyciel<br>Data: $data_wpisu<br>Komentarz:<br>$opis_oceny";
+                    echo '<span class="ocena kolor' . $wartosc . '" title="' . $info . '" data-html="true" data-toggle="tooltip" data-placement="top">' . $wartosc . '</span>';
                 }
-
-                echo '<span class="ocena kolor' . $wpis_row['wartosc'] . '" title="' . $info . '" data-html="true" data-toggle="tooltip" data-placement="top">' . $wpis_row['wartosc'] . '</span>';
+            } else {
+                echo '<p class="text-muted">Brak ocen dla tego przedmiotu</p>';
             }
+
+            echo '</div>'; // card-body
+            echo '</div>'; // card
+            echo '</div>'; // col-12
         }
-        echo "</div>";
-    }
-    ?>
+        ?>
+    </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
