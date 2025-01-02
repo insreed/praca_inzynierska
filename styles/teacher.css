@@ -1,0 +1,145 @@
+.tooltip {
+    z-index: 1112;
+    position: absolute;
+}
+
+.grade-btn {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 40px;
+    height: 40px;
+    transition: transform 0.2s, box-shadow 0.3s;
+    margin-right: 5px;
+}
+
+.grade-btn.kolor1 {
+    background-color: rgb(255, 0, 0);
+    color: #fff;
+}
+
+.grade-btn.kolor2 {
+    background-color: rgb(255, 145, 0);
+    color: #fff;
+}
+
+.grade-btn.kolor3 {
+    background-color: rgb(255, 208, 0);
+    color: #000;
+}
+
+.grade-btn.kolor4 {
+    background-color: rgb(204, 255, 0);
+    color: #000;
+}
+
+.grade-btn.kolor5 {
+    background-color: rgb(72, 255, 0);
+    color: #000;
+}
+
+.grade-btn.kolor6 {
+    background-color: rgb(0, 255, 149);
+    color: #000;
+}
+
+.grade-btn:hover {
+    transform: scale(1.1);
+}
+
+.grade-btn.selected {
+    box-shadow: 0 0 0 3px #007bff;
+    outline: none;
+}
+
+.btn-submit {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    width: auto;
+    height: auto;
+    margin: 10px;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+.btn-submit:hover {
+    background-color: #218838;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-submit:active {
+    transform: scale(0.98);
+}
+
+.description-container {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.description-label {
+    margin-right: 10px;
+}
+
+#grade-description {
+    flex: 1;
+    border-radius: 5px;
+    border: 1px solid #696969;
+    padding: 10px;
+    background-color: #b4b4b4;
+    resize: none;
+    width: calc(100% - 50px);
+    /* Dopasowanie do przestrzeni */
+}
+
+#char-counter {
+    font-family: Arial, sans-serif;
+    color: #696969;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Media Queries for Mobile */
+@media screen and (max-width: 768px) {
+    .description-container {
+        flex-direction: column;
+        align-items: stretch;
+        /* Rozciąga elementy */
+    }
+
+    .description-label {
+        text-align: left;
+        margin-bottom: 10px;
+        width: 100%;
+        /* Szerokość 100% */
+    }
+
+    #grade-description {
+        width: 100%;
+        /* Szerokość 100% */
+        max-width: 100%;
+        /* Maksymalna szerokość */
+    }
+
+    #char-counter {
+        text-align: right;
+        width: 100%;
+        /* Dostosowanie licznika do szerokości */
+    }
+
+    .btn-submit {
+        width: 100%;
+        /* Przycisk na pełną szerokość */
+        min-width: unset;
+        /* Usunięcie minimalnej szerokości */
+    }
+    
+}
