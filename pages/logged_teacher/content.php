@@ -1,237 +1,6 @@
-<style>
-    .ocena {
-        position: relative;
-        cursor: pointer;
-    }
-
-    .oceny {
-        padding-left: 20px;
-    }
-
-    .kolor1 {
-        background-color: rgb(255, 0, 0)
-    }
-
-    .kolor2 {
-        background-color: rgb(255, 145, 0)
-    }
-
-    .kolor3 {
-        background-color: rgb(255, 208, 0)
-    }
-
-    .kolor4 {
-        background-color: rgb(204, 255, 0)
-    }
-
-    .kolor5 {
-        background-color: rgb(72, 255, 0)
-    }
-
-    .kolor6 {
-        background-color: rgb(0, 255, 149)
-    }
-
-    .tooltip {
-        z-index: 1112;
-        position: absolute;
-    }
-
-    .grade-btn {
-        padding: 10px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-        width: 40px;
-        height: 40px;
-        transition: transform 0.2s, box-shadow 0.3s;
-        margin-right: 5px;
-        user-select: none;
-    }
-
-    .grade-btn.kolor1 {
-        background-color: rgb(255, 0, 0);
-        color: #fff;
-        user-select: none;
-    }
-
-    .grade-btn.kolor2 {
-        background-color: rgb(255, 145, 0);
-        color: #fff;
-        user-select: none;
-    }
-
-    .grade-btn.kolor3 {
-        background-color: rgb(255, 208, 0);
-        color: #000;
-        user-select: none;
-    }
-
-    .grade-btn.kolor4 {
-        background-color: rgb(204, 255, 0);
-        color: #000;
-        user-select: none;
-    }
-
-    .grade-btn.kolor5 {
-        background-color: rgb(72, 255, 0);
-        color: #000;
-        user-select: none;
-    }
-
-    .grade-btn.kolor6 {
-        background-color: rgb(0, 255, 149);
-        color: #000;
-        user-select: none;
-    }
-
-    .grade-btn:hover {
-        transform: scale(1.1);
-    }
-
-    .grade-btn.selected {
-        box-shadow: 0 0 0 3px #007bff;
-        outline: none;
-    }
-
-    .btn-submit {
-        padding: 12px 20px;
-        border: none;
-        border-radius: 8px;
-        background-color: #28a745;
-        color: #fff;
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 16px;
-        width: auto;
-        height: auto;
-        margin: 10px;
-        transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-    }
-
-    .btn-submit:disabled {
-        background-color: #b4b4b4;
-        cursor: not-allowed;
-        color: #fff;
-    }
-
-    .btn-no {
-        padding: 12px 20px;
-        border: none;
-        border-radius: 8px;
-        background-color: rgb(207, 27, 27);
-        color: #fff;
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 16px;
-        width: auto;
-        height: auto;
-        margin: 10px;
-        transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-    }
-
-    .btn-submit:hover {
-        background-color: #218838;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .btn-submit:active {
-        transform: scale(0.98);
-    }
-
-    .description-container {
-        margin-top: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .description-label {
-        margin-right: 10px;
-    }
-
-    #grade-description {
-        flex: 1;
-        border-radius: 5px;
-        border: 1px solid #696969;
-        padding: 10px;
-        background-color: #b4b4b4;
-        resize: none;
-        width: calc(100% - 50px);
-    }
-
-    #char-counter {
-        font-family: Arial, sans-serif;
-        color: #696969;
-        font-weight: bold;
-        font-size: 14px;
-    }
-
-    #edit-grade-modal {
-        position: fixed;
-        width: 30%;
-        height: 30%;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    #edit-grade-description {
-        flex: 1;
-        border-radius: 5px;
-        border: 1px solid #696969;
-        padding: 10px;
-        background-color: #b4b4b4;
-        resize: none;
-        width: calc(100% - 50px);
-    }
-
-    .modal-content {
-        padding:10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
-
-    #delete-confirm-modal {
-        position: fixed;
-        padding: 20px;
-        width: 20%;
-        height: 10%;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1001;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    button {
-        margin-top: 10px;
-    }
-
-    .close-x {
-        position: absolute;
-        top: -10px;
-        right: 10px;
-        background: none;
-        border: none;
-        font-size: 50px;
-        cursor: pointer;
-        color: #b4b4b4;
-    }
-</style>
-
+<link rel="stylesheet" href="../styles/teacher.css">
 <div class="content-wrapper">
-    <div class="content-header">
+    <!-- <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
@@ -245,12 +14,17 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
-    <section class="content">
-        <div class="container-fluid">
+        <section class="content mt-4">
+        <div class="container-fluid mt-4">
+            <?php
+                if (!isset($_GET["subjectId"])) {
+                    include "teacher-dashboard.php";
+                } else {
+            ?>
             <form action="../scripts/add_grade.php" method="post">
-                <div style='margin: 0 auto; height: 650px; overflow-y: scroll;'>
+                <div style='margin: 0 auto; margin-top:75px;'>
                     <?php
                     require_once "../scripts/connect.php";
 
@@ -623,3 +397,4 @@
         updateSaveButtonState();
     });
 </script>
+<?php }?>
