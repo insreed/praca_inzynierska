@@ -6,6 +6,7 @@ $sql = "SELECT
             wpisy.id_wpisu,
             wpisy.data_wpisu,
             wpisy.wartosc,
+            wpisy.opis_oceny,
             przedmioty.nazwa_przedmiotu,
             CONCAT(uczniowie.firstName, ' ', uczniowie.lastName) AS uczen,
             CONCAT(nauczyciele.firstName, ' ', nauczyciele.lastName) AS nauczyciel
@@ -19,42 +20,64 @@ $sql = "SELECT
 $result = $conn->query($sql);
 ?>
 
-<div class="container mt-4">
-    <h2>Oceny z Wpisami</h2>
+<div class="container mt-5 pt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-    <div class="table-responsive mt-4">
-        <table class="table table-bordered table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th>ID Wpisu</th>
-                    <th>Uczeń</th>
-                    <th>Przedmiot</th>
-                    <th>Wartość Oceny</th>
-                    <th>Nauczyciel</th>
-                    <th>Data Wpisu</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if ($result && $result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>{$row['id_wpisu']}</td>";
-                        echo "<td>{$row['uczen']}</td>";
-                        echo "<td>{$row['nazwa_przedmiotu']}</td>";
-                        echo "<td>{$row['wartosc']}</td>";
-                        echo "<td>{$row['nauczyciel']}</td>";
-                        echo "<td>{$row['data_wpisu']}</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='6' class='text-center'>Brak wpisów ocen w bazie danych.</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
+        <h2 class="text-center mb-0">Oceny z Wpisami</h2>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Lista Ocen</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="bg-dark text-white thead-dark">
+                        <tr>
+                            <th>ID Wpisu</th>
+                            <th>Uczeń</th>
+                            <th>Przedmiot</th>
+                            <th>Ocena</th>
+                            <th>Nauczyciel</th>
+                            <th>Data Wpisu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if ($result && $result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $wartosc = intval($row['wartosc']);
+                                $data_wpisu = date("d-m-Y H:i", strtotime($row['data_wpisu']));
+                                $opis_oceny = !empty($row['opis_oceny']) ? htmlspecialchars($row['opis_oceny']) : "Brak opisu";
+
+                                $info = "Uczeń: {$row['uczen']}<br>Przedmiot: {$row['nazwa_przedmiotu']}<br>Nauczyciel: {$row['nauczyciel']}<br>Data: $data_wpisu<br>Komentarz: $opis_oceny";
+
+                                echo "<tr>";
+                                echo "<td>{$row['id_wpisu']}</td>";
+                                echo "<td>{$row['uczen']}</td>";
+                                echo "<td>{$row['nazwa_przedmiotu']}</td>";
+                                echo '<td><span class="ocena kolor' . $wartosc . '" title="' . $info . '" data-html="true" data-toggle="tooltip" data-placement="top">' . $wartosc . '</span></td>';
+                                echo "<td>{$row['nauczyciel']}</td>";
+                                echo "<td>$data_wpisu</td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='6' class='text-center'>Brak wpisów ocen w bazie danych.</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 
 <?php
 $conn->close();
