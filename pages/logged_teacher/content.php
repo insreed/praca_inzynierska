@@ -47,36 +47,43 @@
         height: 40px;
         transition: transform 0.2s, box-shadow 0.3s;
         margin-right: 5px;
+        user-select: none;
     }
 
     .grade-btn.kolor1 {
         background-color: rgb(255, 0, 0);
         color: #fff;
+        user-select: none;
     }
 
     .grade-btn.kolor2 {
         background-color: rgb(255, 145, 0);
         color: #fff;
+        user-select: none;
     }
 
     .grade-btn.kolor3 {
         background-color: rgb(255, 208, 0);
         color: #000;
+        user-select: none;
     }
 
     .grade-btn.kolor4 {
         background-color: rgb(204, 255, 0);
         color: #000;
+        user-select: none;
     }
 
     .grade-btn.kolor5 {
         background-color: rgb(72, 255, 0);
         color: #000;
+        user-select: none;
     }
 
     .grade-btn.kolor6 {
         background-color: rgb(0, 255, 149);
         color: #000;
+        user-select: none;
     }
 
     .grade-btn:hover {
@@ -93,6 +100,27 @@
         border: none;
         border-radius: 8px;
         background-color: #28a745;
+        color: #fff;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 16px;
+        width: auto;
+        height: auto;
+        margin: 10px;
+        transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+
+    .btn-submit:disabled {
+        background-color: #b4b4b4;
+        cursor: not-allowed;
+        color: #fff;
+    }
+
+    .btn-no {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        background-color: rgb(207, 27, 27);
         color: #fff;
         cursor: pointer;
         font-weight: bold;
@@ -147,24 +175,58 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        border: 1px solid #696969;
         z-index: 1000;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
+    #edit-grade-description {
+        flex: 1;
+        border-radius: 5px;
+        border: 1px solid #696969;
+        padding: 10px;
+        background-color: #b4b4b4;
+        resize: none;
+        width: calc(100% - 50px);
+    }
+
     .modal-content {
+        padding:10px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
+    }
 
+    #delete-confirm-modal {
+        position: fixed;
+        padding: 20px;
+        width: 20%;
+        height: 10%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     button {
         margin-top: 10px;
+    }
+
+    .close-x {
+        position: absolute;
+        top: -10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 50px;
+        cursor: pointer;
+        color: #b4b4b4;
     }
 </style>
 
@@ -332,7 +394,7 @@
                         <label for="grade-description" class="description-label">Opis oceny (opcjonalny):</label>
                         <textarea name="grade_description" id="grade-description" rows="1" maxlength="64"></textarea>
                         <span id="char-counter">0/64</span>
-                        <button type="submit" class="btn-submit">Zapisz wszystkie oceny</button>
+                        <button type="submit" class="btn-submit" id="save-all-grades" disabled>Zapisz wszystkie oceny</button>
                     </div>
 
                 <?php
@@ -345,7 +407,8 @@
 
 <div id="edit-grade-modal" style="display: none;">
     <div class="modal-content">
-        <h3>Edytuj ocenę</h3>
+        <button type="button" onclick="closeEditModal()" class="close-x">&times;</button>
+        <h3>Edytuj lub usuń ocenę</h3>
         <form id="edit-grade-form">
             <input type="hidden" name="id_oceny" id="edit-grade-id">
             <label>Wybierz ocenę:</label>
@@ -358,25 +421,51 @@
             </div>
             <input type="hidden" name="wartosc" id="edit-grade-value" required>
             <label for="edit-grade-description">Opis:</label>
-            <textarea name="opis_oceny" id="edit-grade-description" rows="1"></textarea>
-            <button type="submit">Zapisz zmiany</button>
-            <button type="button" onclick="closeEditModal()">Anuluj</button>
+            <br>
+            <textarea name="opis_oceny" id="edit-grade-description" class="edit-grade-description" rows="1"></textarea>
+            <br>
+            <button type="submit" class="btn-submit">Zapisz zmiany</button>
+            <button type="button" id="delete-grade-btn" class="btn-no" onclick="openDeleteConfirmModal()">Usuń ocenę</button>
         </form>
     </div>
 </div>
 
+<div id="delete-confirm-modal" style="display: none;">
+    <div class="modal-content">
+        <h3>Potwierdzenie usunięcia</h3>
+        <p>Czy na pewno chcesz usunąć tę ocenę?</p>
+        <div style="display: flex; gap: 10px;">
+            <button type="button" class="btn-submit" onclick="confirmDeleteGrade()">Tak</button>
+            <button type="button" class="btn-no" onclick="closeDeleteConfirmModal()">Nie</button>
+        </div>
+    </div>
+</div>
+
+
 <script>
     function selectGrade(studentId, gradeValue) {
-        // Usuwa zaznaczenie z innych przycisków w tym formularzu dla tego samego ucznia
-        const studentRow = document.querySelector(`#grade-value-${studentId}`).closest('tr');
+    const studentRow = document.querySelector(`#grade-value-${studentId}`).closest('tr');
+    const gradeInput = document.querySelector(`#grade-value-${studentId}`);
+    const selectedButton = studentRow.querySelector(`.grade-btn[data-value='${gradeValue}']`);
+
+    // Sprawdź, czy przycisk jest już zaznaczony
+    if (selectedButton.classList.contains('selected')) {
+        // Usuń zaznaczenie
+        selectedButton.classList.remove('selected');
+        gradeInput.value = ''; // Resetuj wartość oceny
+    } else {
+        // Usuń zaznaczenie z innych przycisków
         studentRow.querySelectorAll('.grade-btn').forEach(btn => btn.classList.remove('selected'));
-
-        // Ustawia wybrany przycisk jako aktywny
-        studentRow.querySelector(`.grade-btn[data-value='${gradeValue}']`).classList.add('selected');
-
-        // Ustawia wartość oceny w ukrytym polu
-        document.querySelector(`#grade-value-${studentId}`).value = gradeValue;
+        
+        // Zaznacz nowy przycisk
+        selectedButton.classList.add('selected');
+        gradeInput.value = gradeValue; // Ustaw wartość oceny
     }
+
+    // Zaktualizuj stan przycisku "Zapisz wszystkie oceny"
+    updateSaveButtonState();
+}
+
 
     function selectEditGrade(gradeValue) {
         // Usuwa zaznaczenie z innych przycisków w modal
@@ -430,6 +519,65 @@
         document.getElementById('edit-grade-modal').style.display = 'block';
     }
 
+    function deleteGrade() {
+        const gradeId = document.getElementById('edit-grade-id').value;
+
+        if (confirm('Czy na pewno chcesz usunąć tę ocenę?')) {
+            fetch('../scripts/delete_grade.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id_oceny: gradeId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload(); // Odświeżenie strony po usunięciu oceny
+                    } else {}
+                })
+                .catch(error => console.error('Error:', error));
+
+            closeEditModal();
+        }
+    }
+
+    function openDeleteConfirmModal() {
+        document.getElementById('delete-confirm-modal').style.display = 'block';
+    }
+
+    function closeDeleteConfirmModal() {
+        document.getElementById('delete-confirm-modal').style.display = 'none';
+    }
+
+    function confirmDeleteGrade() {
+        const gradeId = document.getElementById('edit-grade-id').value;
+
+        fetch('../scripts/delete_grade.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id_oceny: gradeId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload(); // Odświeżenie strony po usunięciu oceny
+                } else {
+                    alert('Wystąpił błąd podczas usuwania oceny.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+
+        closeDeleteConfirmModal();
+        closeEditModal();
+    }
+
     function closeEditModal() {
         document.getElementById('edit-grade-modal').style.display = 'none';
     }
@@ -452,5 +600,26 @@
             .catch(error => console.error('Error:', error)); // Logowanie błędów
 
         closeEditModal(); // Zamknięcie modalu
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const gradeButtons = document.querySelectorAll('.grade-btn');
+        const saveAllButton = document.getElementById('save-all-grades');
+
+        function updateSaveButtonState() {
+            // Sprawdź, czy jakakolwiek ocena została zaznaczona
+            const hasSelectedGrade = Array.from(document.querySelectorAll('.grade-input')).some(input => input.value);
+            saveAllButton.disabled = !hasSelectedGrade; // Włącz lub wyłącz przycisk
+        }
+
+        // Nasłuchuj kliknięć na przyciskach ocen
+        gradeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                updateSaveButtonState();
+            });
+        });
+
+        // Wywołaj raz, aby upewnić się, że stan przycisku jest poprawny na starcie
+        updateSaveButtonState();
     });
 </script>
