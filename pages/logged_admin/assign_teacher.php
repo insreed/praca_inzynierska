@@ -61,74 +61,95 @@ $stmtAssignments->execute();
 $resultAssignments = $stmtAssignments->get_result();
 ?>
 
-<div class="container mt-4">
-    <h2>Przydział klas dla nauczyciela:
-        <?php echo htmlspecialchars($teacher['firstName'] . ' ' . $teacher['lastName']); ?></h2>
-
-    <!-- Przycisk powrotu -->
-    <a href="?view=users" class="btn btn-secondary mb-3">Powrót do użytkowników</a>
+<div class="container mt-5 pt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Przydział Klas dla Nauczyciela<span class="text-center text-primary mb-4">
+        <?php echo htmlspecialchars($teacher['firstName'] . ' ' . $teacher['lastName']); ?>
+        </span></h2>
+        
+        <a href="?view=users" class="btn btn-secondary shadow-sm">
+            <i class="fas fa-arrow-left"></i> Powrót do Użytkowników
+        </a>
+    </div>
+    
 
     <!-- Tabela z aktualnymi przydziałami -->
-    <div class="table-responsive mt-3">
-        <table class="table table-bordered">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Klasa</th>
-                    <th>Przedmiot</th>
-                    <th>Akcje</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = $resultAssignments->fetch_assoc()): ?>
+    <div class="card shadow-sm mb-5">
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Aktualne Przydziały</h5>
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
                     <tr>
-                        <td><?php echo htmlspecialchars($row['klasa']); ?></td>
-                        <td><?php echo htmlspecialchars($row['przedmiot']); ?></td>
-                        <td>
-                            <a href="../scripts/delete_assignment.php?assignment_id=<?php echo $row['id_przydzialu']; ?>&teacher_id=<?php echo $teacherId; ?>"
-                                class="btn btn-danger btn-sm">Usuń</a>
-                        </td>
+                        <th>Klasa</th>
+                        <th>Przedmiot</th>
+                        <th>Akcje</th>
                     </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php while ($row = $resultAssignments->fetch_assoc()): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($row['klasa']); ?></td>
+                            <td><?php echo htmlspecialchars($row['przedmiot']); ?></td>
+                            <td>
+                                <a href="../scripts/delete_assignment.php?assignment_id=<?php echo $row['id_przydzialu']; ?>&teacher_id=<?php echo $teacherId; ?>"
+                                    class="btn btn-danger btn-sm shadow-sm">
+                                    Usuń
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Formularz do dodawania przydziału -->
-    <h4>Dodaj Przydział</h4>
-    <form action="../scripts/add_assignment.php" method="post">
-        <input type="hidden" name="teacher_id" value="<?php echo $teacherId; ?>">
-
-        <div class="form-group">
-            <label for="class_id">Klasa</label>
-            <select class="form-control" id="class_id" name="class_id" required>
-                <option value="">Wybierz klasę</option>
-                <?php
-                $sqlClasses = "SELECT id_klasy, nazwa FROM klasa";
-                $resultClasses = $conn->query($sqlClasses);
-                while ($class = $resultClasses->fetch_assoc()) {
-                    echo "<option value='{$class['id_klasy']}'>{$class['nazwa']}</option>";
-                }
-                ?>
-            </select>
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Dodaj Przydział</h5>
         </div>
+        <div class="card-body">
+            <form action="../scripts/add_assignment.php" method="post">
+                <input type="hidden" name="teacher_id" value="<?php echo $teacherId; ?>">
 
-        <div class="form-group">
-            <label for="subject_id">Przedmiot</label>
-            <select class="form-control" id="subject_id" name="subject_id" required>
-                <option value="">Wybierz przedmiot</option>
-                <?php
-                $sqlSubjects = "SELECT id_przedmiotu, nazwa_przedmiotu FROM przedmioty";
-                $resultSubjects = $conn->query($sqlSubjects);
-                while ($subject = $resultSubjects->fetch_assoc()) {
-                    echo "<option value='{$subject['id_przedmiotu']}'>{$subject['nazwa_przedmiotu']}</option>";
-                }
-                ?>
-            </select>
+                <div class="form-group">
+                    <label for="class_id">Klasa</label>
+                    <select class="form-control" id="class_id" name="class_id" required>
+                        <option value="">Wybierz klasę</option>
+                        <?php
+                        $sqlClasses = "SELECT id_klasy, nazwa FROM klasa";
+                        $resultClasses = $conn->query($sqlClasses);
+                        while ($class = $resultClasses->fetch_assoc()) {
+                            echo "<option value='{$class['id_klasy']}'>{$class['nazwa']}</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="subject_id">Przedmiot</label>
+                    <select class="form-control" id="subject_id" name="subject_id" required>
+                        <option value="">Wybierz przedmiot</option>
+                        <?php
+                        $sqlSubjects = "SELECT id_przedmiotu, nazwa_przedmiotu FROM przedmioty";
+                        $resultSubjects = $conn->query($sqlSubjects);
+                        while ($subject = $resultSubjects->fetch_assoc()) {
+                            echo "<option value='{$subject['id_przedmiotu']}'>{$subject['nazwa_przedmiotu']}</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary shadow-sm">
+                        <i class="fas fa-plus"></i> Dodaj Przydział
+                    </button>
+                </div>
+            </form>
         </div>
-
-        <button type="submit" class="btn btn-primary">Dodaj przydział</button>
-        <a href="?view=users" class="btn btn-secondary">Powrót do użytkowników</a>
-    </form>
+    </div>
 </div>
 
 <?php
