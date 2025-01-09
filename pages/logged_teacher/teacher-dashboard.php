@@ -21,8 +21,8 @@
                     $querySubjects = "
                         SELECT DISTINCT przedmioty.nazwa_przedmiotu, przedmioty.id_przedmiotu
                         FROM przedmioty
-                        INNER JOIN przydział_nauczyciel ON przedmioty.id_przedmiotu = przydział_nauczyciel.id_przedmiotu
-                        WHERE przydział_nauczyciel.id_nauczyciela = ?";
+                        INNER JOIN przydzial_nauczyciel ON przedmioty.id_przedmiotu = przydzial_nauczyciel.id_przedmiotu
+                        WHERE przydzial_nauczyciel.id_nauczyciela = ?";
                     $stmtSubjects = $conn->prepare($querySubjects);
                     $stmtSubjects->bind_param("i", $user_id);
                     $stmtSubjects->execute();
@@ -46,9 +46,9 @@
                             // Pobranie klas dla przedmiotu
                             $queryClasses = "
                                 SELECT klasa.nazwa AS klasa_nazwa, klasa.id_klasy
-                                FROM przydział_nauczyciel
-                                INNER JOIN klasa ON przydział_nauczyciel.id_klasy = klasa.id_klasy
-                                WHERE przydział_nauczyciel.id_przedmiotu = ? AND przydział_nauczyciel.id_nauczyciela = ?";
+                                FROM przydzial_nauczyciel
+                                INNER JOIN klasa ON przydzial_nauczyciel.id_klasy = klasa.id_klasy
+                                WHERE przydzial_nauczyciel.id_przedmiotu = ? AND przydzial_nauczyciel.id_nauczyciela = ?";
                             $stmtClasses = $conn->prepare($queryClasses);
                             $stmtClasses->bind_param("ii", $subjectId, $user_id);
                             $stmtClasses->execute();
@@ -94,8 +94,8 @@
                     $queryClasses = "
                         SELECT DISTINCT klasa.nazwa AS klasa_nazwa, klasa.id_klasy
                         FROM klasa
-                        INNER JOIN przydział_nauczyciel ON klasa.id_klasy = przydział_nauczyciel.id_klasy
-                        WHERE przydział_nauczyciel.id_nauczyciela = ?";
+                        INNER JOIN przydzial_nauczyciel ON klasa.id_klasy = przydzial_nauczyciel.id_klasy
+                        WHERE przydzial_nauczyciel.id_nauczyciela = ?";
                     $stmtClasses = $conn->prepare($queryClasses);
                     $stmtClasses->bind_param("i", $user_id);
                     $stmtClasses->execute();
@@ -119,9 +119,9 @@
                             // Pobranie przedmiotów dla klasy
                             $querySubjectsForClass = "
                                 SELECT przedmioty.nazwa_przedmiotu, przedmioty.id_przedmiotu
-                                FROM przydział_nauczyciel
-                                INNER JOIN przedmioty ON przydział_nauczyciel.id_przedmiotu = przedmioty.id_przedmiotu
-                                WHERE przydział_nauczyciel.id_klasy = ? AND przydział_nauczyciel.id_nauczyciela = ?";
+                                FROM przydzial_nauczyciel
+                                INNER JOIN przedmioty ON przydzial_nauczyciel.id_przedmiotu = przedmioty.id_przedmiotu
+                                WHERE przydzial_nauczyciel.id_klasy = ? AND przydzial_nauczyciel.id_nauczyciela = ?";
                             $stmtSubjectsForClass = $conn->prepare($querySubjectsForClass);
                             $stmtSubjectsForClass->bind_param("ii", $classId, $user_id);
                             $stmtSubjectsForClass->execute();

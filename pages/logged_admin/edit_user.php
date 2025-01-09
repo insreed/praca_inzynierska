@@ -9,9 +9,9 @@ if (!isset($_GET['user_id'])) {
 $userId = intval($_GET['user_id']);
 
 // Pobierz dane użytkownika
-$sql = "SELECT users.id, users.firstName, users.lastName, users.email, users.role_id, users.birthday, COALESCE(przydział_klasy.id_klasy, '') AS assigned_class
+$sql = "SELECT users.id, users.firstName, users.lastName, users.email, users.role_id, users.birthday, COALESCE(przydzial_klasy.id_klasy, '') AS assigned_class
         FROM users
-        LEFT JOIN przydział_klasy ON users.id = przydział_klasy.id_uzytkownika
+        LEFT JOIN przydzial_klasy ON users.id = przydzial_klasy.id_uzytkownika
         WHERE users.id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $userId);

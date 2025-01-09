@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		// Aktualizacja klasy dla studenta
 		if ($roleId == 1) { // Rola studenta
-			$deleteClassSql = "DELETE FROM `przydział_klasy` WHERE id_uzytkownika = ?";
+			$deleteClassSql = "DELETE FROM `przydzial_klasy` WHERE id_uzytkownika = ?";
 			$stmt = $conn->prepare($deleteClassSql);
 			if (!$stmt) {
 				throw new Exception("Błąd przygotowania zapytania (usunięcie klasy): " . $conn->error);
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$stmt->execute();
 
 			if ($classId) {
-				$insertClassSql = "INSERT INTO `przydział_klasy` (id_uzytkownika, id_klasy) VALUES (?, ?)";
+				$insertClassSql = "INSERT INTO `przydzial_klasy` (id_uzytkownika, id_klasy) VALUES (?, ?)";
 				$stmt = $conn->prepare($insertClassSql);
 				if (!$stmt) {
 					throw new Exception("Błąd przygotowania zapytania (wstawienie klasy): " . $conn->error);
