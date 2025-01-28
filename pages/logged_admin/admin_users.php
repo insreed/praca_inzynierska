@@ -40,8 +40,8 @@ $sql = "SELECT
             COALESCE(klasa.nazwa, 'Brak klasy') AS klasa
         FROM users
         INNER JOIN roles ON users.role_id = roles.id
-        LEFT JOIN przydział_klasy ON users.id = przydział_klasy.id_uzytkownika
-        LEFT JOIN klasa ON przydział_klasy.id_klasy = klasa.id_klasy
+        LEFT JOIN przydzial_klasy ON users.id = przydzial_klasy.id_uzytkownika
+        LEFT JOIN klasa ON przydzial_klasy.id_klasy = klasa.id_klasy
         ORDER BY $sortColumn $sortOrder";
 $result = $conn->query($sql);
 ?>

@@ -58,17 +58,25 @@
 
                         if (!isset($_GET["classId"])) {
                             // pobranie klas przypisanych do nauczyciela
-                            $class_sql = "SELECT DISTINCT klasa.id_klasy, klasa.nazwa 
-                                          FROM przydział_nauczyciel
-                                          INNER JOIN klasa ON przydział_nauczyciel.id_klasy = klasa.id_klasy
-                                          WHERE przydział_nauczyciel.id_nauczyciela = $teacher_id AND przydział_nauczyciel.id_przedmiotu = $subject_id";
-                            $class_result = $conn->query($class_sql);
+                            // $class_sql = "SELECT DISTINCT klasa.id_klasy, klasa.nazwa 
+                            //               FROM przydzial_nauczyciel
+                            //               INNER JOIN klasa ON przydzial_nauczyciel.id_klasy = klasa.id_klasy
+                            //               WHERE przydzial_nauczyciel.id_nauczyciela = $teacher_id AND przydzial_nauczyciel.id_przedmiotu = $subject_id";
 
-                            if ($class_result->num_rows > 0) {
+                             $class_sql = "SELECT DISTINCT klasa.id_klasy, klasa.nazwa 
+                                FROM przydzial_nauczyciel
+                                INNER JOIN klasa ON przydzial_nauczyciel.id_klasy = klasa.id_klasy
+                                WHERE przydzial_nauczyciel.id_nauczyciela = ? AND przydzial_nauczyciel.id_przedmiotu = ?";
+                            $class_result = $conn->execute_query($class_sql, [$teacher_id, $subject_id])->fetch_assoc();
+
+                            // if ($class_result->num_rows > 0) {
+                            if (count($class_result) > 0) {
                                 echo "<h3>Wybierz klasę:</h3>";
                                 echo "<ul>";
-                                while ($class = $class_result->fetch_assoc()) {
-                                    echo "<li><a href='logged.php?subjectId=$subject_id&classId=" . $class['id_klasy'] . "'>" . $class['nazwa'] . "</a></li>";
+                                // while ($class = $class_result->fetch_assoc()) {
+                                foreach ($class_result as $class) {
+                                    printf("<li><a href='logged.php?subjectId=%d&classId=%d>%s</a></li>", $subject_id, $class['id_klasy'], $class['nazwa']);
+                                    // echo "<li><a href='logged.php?subjectId=$subject_id&classId=" . $class['id_klasy'] . "'>" . $class['nazwa'] . "</a></li>";
                                 }
                                 echo "</ul>";
                             } else {
@@ -82,22 +90,32 @@
                         $class_id = intval($_GET["classId"]);
                         $subject_id = intval($_GET["subjectId"]);
 
-                        // wyswietlanie klas
-                        $class_name_sql = "SELECT nazwa FROM klasa WHERE id_klasy = $class_id";
-                        $class_name_result = $conn->query($class_name_sql);
-                        if ($class_name_result->num_rows > 0) {
-                            $class_name = $class_name_result->fetch_assoc()['nazwa'];
+                        // // wyswietlanie klas
+                        // $class_name_sql = "SELECT nazwa FROM klasa WHERE id_klasy = $class_id";
+                        // $class_name_result = $conn->query($class_name_sql);
+                        // if ($class_name_result->num_rows > 0) {
+                        //     $class_name = $class_name_result->fetch_assoc()['nazwa'];
+                        //     echo "<h3>Oceny dla klasy: $class_name</h3>";
+                        // }
+                        $class_name_sql = "SELECT nazwa FROM klasa WHERE id_klasy = ?";
+                        $class_name_result = $conn->execute_query($class_name_sql, [$class_id])->fetch_assoc();
+                        if (!empty($class_name_result)) {
+                            $class_name = $class_name_result['nazwa'];
                             echo "<h3>Oceny dla klasy: $class_name</h3>";
                         }
 
                         // pobranie studenow
+                        // $students_sql = "SELECT users.id AS id, users.firstName, users.lastName, users.email 
+                        //                  FROM users
+                        //                  INNER JOIN przydzial_klasy ON przydzial_klasy.id_uzytkownika = users.id
+                        //                  WHERE przydzial_klasy.id_klasy = $class_id AND users.role_id = 1";
+                        // $students_result = $conn->query($students_sql);
                         $students_sql = "SELECT users.id AS id, users.firstName, users.lastName, users.email 
                                          FROM users
-                                         INNER JOIN przydział_klasy ON przydział_klasy.id_uzytkownika = users.id
-                                         WHERE przydział_klasy.id_klasy = $class_id AND users.role_id = 1";
-                        $students_result = $conn->query($students_sql);
-
-                        if ($students_result->num_rows > 0) {
+                                         INNER JOIN przydzial_klasy ON przydzial_klasy.id_uzytkownika = users.id
+                                         WHERE przydzial_klasy.id_klasy = ? AND users.role_id = 1";
+                        $students_result = $conn->execute_query($students_sql, [$class_id])->fetch_all(MYSQLI_ASSOC);
+                        if (count($students_result) > 0) {
                             echo "<table style='width: 100%; min-width: 960px;'>
                                     <tr>
                                         <th style='width:20%; min-width: 250px;'>Imię i Nazwisko</th>
@@ -105,23 +123,36 @@
                                         <th style='width:20%; min-width: 250px;'>Dodaj ocenę</th>
                                     </tr>";
 
-                            while ($student = $students_result->fetch_assoc()) {
+                            // while ($student = $students_result->fetch_assoc()) {
+                            foreach ($students_result as $student) {
                                 echo "<tr>";
                                 echo "<td>" . $student["firstName"] . " " . $student["lastName"] . "</td>";
 
                                 // pobranie ocen
+
+                                // $student_id = $student['id'];
+                                // $grades_sql = "SELECT przedmioty.nazwa_przedmiotu, wpisy.wartosc, wpisy.opis_oceny, wpisy.data_wpisu, wpisy.id_oceny
+                                //     FROM oceny
+                                //     LEFT JOIN wpisy ON oceny.id_oceny = wpisy.id_oceny
+                                //     INNER JOIN przedmioty ON oceny.id_przedmiotu = przedmioty.id_przedmiotu
+                                //     WHERE oceny.id_ucznia = $student_id AND oceny.id_przedmiotu = $subject_id";
+
+                                // $grades_result = $conn->query($grades_sql);
+
                                 $student_id = $student['id'];
                                 $grades_sql = "SELECT przedmioty.nazwa_przedmiotu, wpisy.wartosc, wpisy.opis_oceny, wpisy.data_wpisu, wpisy.id_oceny
                                     FROM oceny
                                     LEFT JOIN wpisy ON oceny.id_oceny = wpisy.id_oceny
                                     INNER JOIN przedmioty ON oceny.id_przedmiotu = przedmioty.id_przedmiotu
-                                    WHERE oceny.id_ucznia = $student_id AND oceny.id_przedmiotu = $subject_id";
+                                    WHERE oceny.id_ucznia = ? AND oceny.id_przedmiotu = ?";
 
-                                $grades_result = $conn->query($grades_sql);
+                                $grades_result = $conn->execute_query($grades_sql, [$student_id, $subject_id])->fetch_all(MYSQLI_ASSOC);
 
                                 echo "<td class='oceny'>";
-                                if ($grades_result && $grades_result->num_rows > 0) {
-                                    while ($grade = $grades_result->fetch_assoc()) {
+                                // if ($grades_result && $grades_result->num_rows > 0) {
+                                if (!empty($grades_result)) {
+                                    // while ($grade = $grades_result->fetch_assoc()) {
+                                    foreach ($grades_result as $grade) {
                                         $grade_id = intval($grade['id_oceny']);
                                         $grade_value = intval($grade['wartosc']);
                                         $grade_description = !empty($grade['opis_oceny']) ? htmlspecialchars($grade['opis_oceny']) : "Brak opisu";

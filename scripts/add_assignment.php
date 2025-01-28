@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $subjectId = intval($_POST['subject_id']);
 
     if ($teacherId > 0 && $classId > 0 && $subjectId > 0) {
-        $sql = "INSERT INTO przydział_nauczyciel (id_nauczyciela, id_klasy, id_przedmiotu) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO przydzial_nauczyciel (id_nauczyciela, id_klasy, id_przedmiotu) VALUES (?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("iii", $teacherId, $classId, $subjectId);
 

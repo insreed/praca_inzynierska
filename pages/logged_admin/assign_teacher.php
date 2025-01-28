@@ -43,17 +43,17 @@ if (isset($_SESSION["message"])) {
 
 // Pobierz listę przydzielonych klas i przedmiotów
 $sqlAssignments = "SELECT 
-                        przydział_nauczyciel.id_przydzialu, 
+                        przydzial_nauczyciel.id_przydzialu, 
                         klasa.nazwa AS klasa, 
                         przedmioty.nazwa_przedmiotu AS przedmiot
                    FROM 
-                        przydział_nauczyciel
+                        przydzial_nauczyciel
                    INNER JOIN 
-                        klasa ON przydział_nauczyciel.id_klasy = klasa.id_klasy
+                        klasa ON przydzial_nauczyciel.id_klasy = klasa.id_klasy
                    INNER JOIN 
-                        przedmioty ON przydział_nauczyciel.id_przedmiotu = przedmioty.id_przedmiotu
+                        przedmioty ON przydzial_nauczyciel.id_przedmiotu = przedmioty.id_przedmiotu
                    WHERE 
-                        przydział_nauczyciel.id_nauczyciela = ?";
+                        przydzial_nauczyciel.id_nauczyciela = ?";
 
 $stmtAssignments = $conn->prepare($sqlAssignments);
 $stmtAssignments->bind_param("i", $teacherId);
@@ -73,7 +73,7 @@ $resultAssignments = $stmtAssignments->get_result();
     </div>
     
 
-    <!-- Tabela z aktualnymi przydziałami -->
+    <!-- Tabela z aktualnymi przydzialami -->
     <div class="card shadow-sm mb-5">
         <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
             <h5 class="card-title mb-0">Aktualne Przydziały</h5>
@@ -105,7 +105,7 @@ $resultAssignments = $stmtAssignments->get_result();
         </div>
     </div>
 
-    <!-- Formularz do dodawania przydziału -->
+    <!-- Formularz do dodawania przydzialu -->
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h5 class="card-title mb-0">Dodaj Przydział</h5>

@@ -40,8 +40,8 @@
                 // Pobierz przedmioty nauczyciela
                 $subjectQuery = "SELECT DISTINCT przedmioty.nazwa_przedmiotu, przedmioty.id_przedmiotu 
                                  FROM przedmioty 
-                                 INNER JOIN przydział_nauczyciel ON przedmioty.id_przedmiotu = przydział_nauczyciel.id_przedmiotu 
-                                 WHERE przydział_nauczyciel.id_nauczyciela = $user_id";
+                                 INNER JOIN przydzial_nauczyciel ON przedmioty.id_przedmiotu = przydzial_nauczyciel.id_przedmiotu 
+                                 WHERE przydzial_nauczyciel.id_nauczyciela = $user_id";
                 $subjectResult = $conn->query($subjectQuery);
 
                 if ($subjectResult->num_rows > 0) {
@@ -61,10 +61,10 @@
 
                         // Pobierz klasy dla przedmiotu
                         $classQuery = "SELECT klasa.nazwa AS klasa_nazwa, klasa.id_klasy 
-                                       FROM przydział_nauczyciel 
-                                       INNER JOIN klasa ON przydział_nauczyciel.id_klasy = klasa.id_klasy 
-                                       WHERE przydział_nauczyciel.id_nauczyciela = $user_id 
-                                       AND przydział_nauczyciel.id_przedmiotu = {$subject['id_przedmiotu']}";
+                                       FROM przydzial_nauczyciel 
+                                       INNER JOIN klasa ON przydzial_nauczyciel.id_klasy = klasa.id_klasy 
+                                       WHERE przydzial_nauczyciel.id_nauczyciela = $user_id 
+                                       AND przydzial_nauczyciel.id_przedmiotu = {$subject['id_przedmiotu']}";
                         $classResult = $conn->query($classQuery);
 
                         if ($classResult->num_rows > 0) {

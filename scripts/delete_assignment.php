@@ -7,7 +7,7 @@ if (isset($_GET['assignment_id']) && isset($_GET['teacher_id'])) {
     $teacherId = intval($_GET['teacher_id']);
 
     if ($assignmentId > 0) {
-        $sql = "DELETE FROM przydział_nauczyciel WHERE id_przydzialu = ?";
+        $sql = "DELETE FROM przydzial_nauczyciel WHERE id_przydzialu = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $assignmentId);
 

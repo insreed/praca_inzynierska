@@ -80,12 +80,10 @@ if (isset($_SESSION["message"])) {
     <?php
     if (isset($_GET['updateClassId'])) {
         $updateClassId = intval($_GET['updateClassId']);
-        $sql = "SELECT * FROM klasa WHERE id_klasy = $updateClassId";
-        $result = $conn->query($sql);
+        $sql = "SELECT * FROM klasa WHERE id_klasy = ?";
+        $updateClass = $conn->execute_query($sql, [$updateClassId])->fetch_assoc();
 
-        if ($result && $result->num_rows > 0) {
-            $updateClass = $result->fetch_assoc();
-
+        if (!empty($updateClass)) {
             echo <<<EDITCLASSMODAL
             <div class="modal show fade" id="editClassModal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
                 <div class="modal-dialog modal-lg" role="document">
